@@ -1,23 +1,21 @@
 import { FileText, ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const ResearchPapers = () => {
   // Sample papers data (Replace with API data)
-  const papers = [
-    {
-      id: 1,
-      title: "AI in Healthcare: Revolutionizing Diagnosis",
-      author: "Dr. John Doe",
-      category: "Artificial Intelligence",
-      abstract: "Exploring how AI is transforming healthcare diagnostics...",
-    },
-    {
-      id: 2,
-      title: "Blockchain for Secure Transactions",
-      author: "Jane Smith",
-      category: "Blockchain",
-      abstract: "An in-depth look at the role of blockchain in secure transactions...",
-    },
-  ];
+  const [papers, setPapers] = useState([])
+
+
+useEffect(() => {
+	fetch("/api/research_papers")
+		.then((response) => response.json())
+		.then((data) => {
+      setPapers(data)
+		})
+		.catch((error) => {
+			console.error("Error fetching research papers:", error);
+		});
+}, []);
 
   return (
     <section className="py-16 px-6 md:px-12 bg-gray-200 text-gray-900">
