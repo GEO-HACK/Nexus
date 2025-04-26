@@ -1,6 +1,6 @@
 const Sidebar = ({ categories, selectedCategory, setSelectedCategory }) => {
   return (
-    <aside className="w-1/4 bg-white px-6 py-6 shadow-lg rounded-lg h-full">
+    <aside className="w-1/4 bg-white px-6 py-6 shadow-lg rounded-lg h-full overflow-scroll">
       <h1 className="text-lg font-bold mb-4 text-gray-800">Filter By Categories</h1>
       <ul className="space-y-2">
         {/* Render categories dynamically */}

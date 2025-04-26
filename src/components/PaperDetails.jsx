@@ -101,12 +101,12 @@ const PaperDetails = ({ paper, categoryName, publisherName }) => {
           <section>
             <h2 className="text-xl font-semibold text-gray-800">Tags</h2>
             <div className="mt-2 flex flex-wrap gap-2">
-              {paper.tags.map((tag) => (
+            {JSON.parse(paper.tags).map((tag, index) => (
                 <span
                   key={index}
                   className="bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
                 >
-                  #{tag}
+                  #office
                 </span>
               ))}
             </div>
