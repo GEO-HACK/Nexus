@@ -20,6 +20,7 @@ const Submit = () => {
   const [categories, setCategories] = useState([]);
   const [users, setUsers] = useState([]);
   const [availableTags, setAvailableTags] = useState([]);
+  const [ successPopup, setSuccessPopup] = useState(false);
 
   const token = localStorage.getItem("token");
 
@@ -94,6 +95,7 @@ const Submit = () => {
 
     try {
       await uploadPapers(formData, token);
+      setSuccessPopup(true);
       setSuccess("File uploaded successfully!");
       setFile(null);
       setTitle("");
@@ -283,6 +285,24 @@ const Submit = () => {
             </button>
           </div>
         </form>
+        {successPopup && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg text-center ">
+              <h2 className="text-2xl font-bold text-green-600 mb-4">success!</h2>
+              <p className="text-gray-700 mb-4">
+                Your document has been submitted successfully!
+              </p>
+              <button
+                onClick={() => setSuccessPopup(false)}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+              >
+                Close
+              </button>
+            </div>
+            
+
+          </div>
+        )}
       </div>
     </div>
   );
