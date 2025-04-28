@@ -70,8 +70,27 @@ const Submit = () => {
     setError("");
     setSuccess("");
 
-    if (!file || !title || !description || !category || !publisher) {
-      setError("All required fields must be filled.");
+    //validation checks
+    if(title.trim().trim.length < 3){
+      setError("Title must be at least 3 characters long.");
+      return;
+    }
+    if(description.trim().length < 20){
+      setError("Description must be at least 20 characters long.");
+      return;
+    }
+    if (!publisher.trim()){
+      setError("Publisher field cannot be empty.");
+      return;
+    }
+    if (!file){
+      setError("Please select a file to upload.");
+      return;
+    }
+
+    const validFileTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+    if (!validFileTypes.includes(file.type)) {
+      setError("Invalid file type. Only PDF, DOC, and DOCX are allowed.");
       return;
     }
 
@@ -114,7 +133,7 @@ const Submit = () => {
       );
     }
   };
-  console.log("tags being sent:",tags)
+ 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4 py-4">
@@ -152,6 +171,9 @@ const Submit = () => {
               className="mt-1 w-full rounded-lg border px-3 py-2"
               required
             />
+            {error && error.includes("Title") && (
+              <p className="text-red-600 text-sm mt-1">{error}</p>
+            )}
           </div>
 
           <div className="col-span-1">
@@ -184,6 +206,9 @@ const Submit = () => {
               className="mt-1 w-full rounded-lg border px-3 py-2"
               required
             />
+            {error && error.includes("Description") && (
+              <p className="text-red-600 text-sm mt-1">{error}</p>
+            )}
           </div>
 
           <div className="col-span-1">
@@ -197,6 +222,9 @@ const Submit = () => {
               className="mt-1 w-full rounded-lg border px-3 py-2"
               required
             />
+            {error && error.includes("Publisher") && (
+              <p className="text-red-600 text-sm mt-1">{error}</p>
+            )}
           </div>
 
           <div className="col-span-1">
@@ -229,11 +257,11 @@ const Submit = () => {
               placeholder="Start typing to see suggestions or add custom tags"
               className="mt-1 w-full rounded-lg border px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            {/* <datalist id="tag-suggestions">
+            <datalist id="tag-suggestions">
               {availableTags.map((tag) => (
                 <option key={tag.tag_id} value={tag.tag_name} />
               ))}
-            </datalist> */}
+            </datalist>
           </div>
 
           <div className="col-span-1">
@@ -273,6 +301,9 @@ const Submit = () => {
                 className="w-full text-sm text-gray-700"
                 required
               />
+              {error && error.includes("file") && (
+                <p className="text-red-600 text-sm mt-1">{error}</p>
+              )}
             </div>
           </div>
 
