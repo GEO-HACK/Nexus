@@ -7,6 +7,11 @@ import { getTags } from "../services/tagServices";
 
 import PaperDetails from "../components/PaperDetails";
 
+import { Worker, Viewer } from "@react-pdf-viewer/core";
+import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
+import "@react-pdf-viewer/core/lib/styles/index.css";
+import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+
 import { ArrowLeft } from "lucide-react";
 
 const SinglePage = () => {
@@ -17,6 +22,8 @@ const SinglePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,6 +56,8 @@ const SinglePage = () => {
 
   if (loading) return <div>Loading...</div>;
 
+  if (error) return <div className="text-red-500">{error}</div>;
+
   // Get the category name by matching the paper's category_id
   const category = categories.find(
     (cat) => cat.category_id === paper.category_id
@@ -61,6 +70,7 @@ const SinglePage = () => {
       })
     : [];
   console.log("Tags:", tagNames);
+
   const BASE_URL = "http://localhost:5000"; // Replace with your server's base URL
   const resolvedFileUrl = paper.file_url.startsWith("http")
     ? paper.file_url
@@ -77,8 +87,6 @@ const SinglePage = () => {
         Back
       </button>
 
-      {error && <div className="text-red-500">{error}</div>}
-
       {paper && (
         <>
           <PaperDetails
@@ -88,12 +96,25 @@ const SinglePage = () => {
 
           {/* Document Preview Section */}
           {paper.file_url.endsWith(".pdf") ? (
-            <div className="w-full h-96 bg-blue-500 border border-blue-300 rounded-lg shadow-md overflow-hidden">
-              <iframe
-                src={resolvedFileUrl}
-                title="PDF Preview"
-                className="w-full h-full"
-              ></iframe>
+            <div className="mt-6 bg-white shadow-lg rounded-lg p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-800">
+                  Document Preview
+                </h3>
+                <p className="text-sm text-gray-500">
+                  Powered by React-PDF-Viewer
+                </p>
+              </div>
+              <div className="w-full h-[600px] border border-gray-300 rounded-lg shadow-sm">
+                <Worker
+                  workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
+                >
+                  <Viewer
+                    fileUrl={resolvedFileUrl}
+                    plugins={[defaultLayoutPluginInstance]}
+                  />
+                </Worker>
+              </div>
             </div>
           ) : paper.file_url.endsWith(".doc") ||
             paper.file_url.endsWith(".docx") ? (
