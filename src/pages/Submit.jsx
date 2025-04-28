@@ -96,7 +96,7 @@ const Submit = () => {
     try {
       await uploadPapers(formData, token);
       setSuccessPopup(true);
-      setSuccess("File uploaded successfully!");
+      // setSuccess("File uploaded successfully!");
       setFile(null);
       setTitle("");
       setDescription("");
@@ -105,7 +105,7 @@ const Submit = () => {
       setTags([]);
       setCoauthors("");
       setMeta("");
-      setTimeout(() => setSuccess(""), 3000);
+      setTimeout(() => setSuccessPopup(false), 3000);
     } catch (err) {
       console.error("Upload error:", err);
       setError(
@@ -285,24 +285,13 @@ const Submit = () => {
             </button>
           </div>
         </form>
-        {successPopup && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg text-center ">
-              <h2 className="text-2xl font-bold text-green-600 mb-4">success!</h2>
-              <p className="text-gray-700 mb-4">
-                Your document has been submitted successfully!
-              </p>
-              <button
-                onClick={() => setSuccessPopup(false)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-              >
-                Close
-              </button>
+      {
+        successPopup && (
+          <div className = "fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+            <p className="text-sm font-semibold">File uploaded successfully!</p>
             </div>
-            
-
-          </div>
-        )}
+        )
+      }
       </div>
     </div>
   );
