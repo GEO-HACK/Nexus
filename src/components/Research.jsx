@@ -22,20 +22,23 @@ const ResearchPapers = () => {
   console.log("Fetched papers:", papers);
 
   return (
-    <section className="py-16 px-6 md:px-12 bg-gray-200 text-gray-900">
+    <section className="py-16 px-6 md:px-12 bg-gradient-to-r from-blue-100 via-indigo-200 to-purple-300 text-gray-900">
       <div className="max-w-4xl mx-auto text-center">
-        <h2 className="text-3xl font-bold">Explore Research Papers</h2>
+        <h2 className="text-4xl font-bold text-gray-800">Explore Research Papers</h2>
         <p className="mt-3 text-gray-600">
-          Browse the latest research papers across various domains.
+          Browse the latest research papers across various domains and discover new insights.
         </p>
       </div>
 
-      <div className="mt-8 grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-        {papers.slice(0, 2).map((paper) => (
-          <div key={paper.paper_id} className="bg-white p-6 rounded-lg shadow-md">
+      <div className="mt-8 grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        {papers.slice(0, 3).map((paper) => (
+          <div
+            key={paper.paper_id}
+            className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300"
+          >
             <div className="flex items-center space-x-3">
               <FileText size={24} className="text-blue-600" />
-              <h3 className="text-xl font-semibold">{paper.paper_name}</h3>
+              <h3 className="text-xl font-semibold text-gray-900">{paper.paper_name}</h3>
             </div>
             <p className="text-gray-500 text-sm mt-1">
               Category ID: {paper.category_id} • Publisher ID: {paper.publisher_id}

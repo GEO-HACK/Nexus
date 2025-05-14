@@ -1,12 +1,11 @@
 import axios from "axios";
 
 // Base API URL
-const API_URL = "http://localhost:5000/api/auth";
 
 // 🔹 Login function
 export const login = async (email, password) => {
     try {
-        const response = await axios.post(`${API_URL}/login`, { email, password });
+        const response = await axios.post(`${process.env.API_URL}/auth/login`, { email, password });
 
         if (response.data.token) {
             localStorage.setItem("token", response.data.token);
@@ -22,7 +21,7 @@ export const login = async (email, password) => {
 // 🔹 Signup function
 export const signup = async (institution,fname, lname,username, email, password) => {
     try {
-        const response = await axios.post(`${API_URL}/register`, {institution, fname, lname,username, email,password });
+        const response = await axios.post(`${process.env.API_URL}/register`, {institution, fname, lname,username, email,password });
 
         if (response.data.token) {
             localStorage.setItem("token", response.data.token);

@@ -1,12 +1,11 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api";
 
 
 // function to get papers from the server
 export const getPapers = async () => {
     try {
-        const response = await axios.get(`${API_URL}/papers`);
+        const response = await axios.get(`${process.env.API_URL}/papers`);
         return response.data;
     }catch (error) {
         console.error("Error fetching papers:", error);
@@ -19,7 +18,7 @@ export const getPapers = async () => {
 //getting papers by id
 export const getPaperById = async (id) => {
     try {
-        const response = await axios.get(`${API_URL}/papers/${id}`);
+        const response = await axios.get(`${process.env.API_URL}/papers/${id}`);
         return response.data;
     } catch (error) {
         console.error("Error fetching paper by ID:", error);
@@ -32,7 +31,7 @@ export const getPaperById = async (id) => {
 export const uploadPapers = async(formData, token) => {
     try{
         const response = await axios.post(
-            `${API_URL}/papers/local`,
+            `${process.env.API_URL}/papers/local`,
             formData,
             {
                 headers :{
@@ -50,7 +49,7 @@ export const uploadPapers = async(formData, token) => {
 
 export const getPapersByUser = async(id) => {
     try{
-        const response = await axios.get(`${API_URL}/papers?publisher_id=${id}`)
+        const response = await axios.get(`${process.env.API_URL}/papers?publisher_id=${id}`)
         return response.data
     }catch(err){
         console.error("Error fetching papers by user:", err);
@@ -62,7 +61,7 @@ export const updatePaper = async (data) => {
         const token = localStorage.getItem("token"); // Retrieve the token from localStorage
 
         const response = await axios.put(
-            `${API_URL}/papers/`, // Correct endpoint
+            `${process.env.API_URL}/papers/`, // Correct endpoint
             data, // Send data as JSON
             {
                 headers: {
@@ -81,7 +80,7 @@ export const deletePapers = async(id) => {
     try{
 
         const token = localStorage.getItem("token");
-        const response = await axios.delete(`${API_URL}/papers/${id}`, {
+        const response = await axios.delete(`${process.env.API_URL}/papers/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             }     
