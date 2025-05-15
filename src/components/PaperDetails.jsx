@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const PaperDetails = ({ paper, categoryName, publisherName }) => {
   const navigate = useNavigate();
-  const BASE_URL = "http://localhost:5000"; // or your production URL
+  const BASE_URL =import.meta.env.VITE_API_URL;; // or your production URL
 
   console.log("Paper details:", paper);
 
