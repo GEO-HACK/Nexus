@@ -7,12 +7,10 @@ const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
-  const { user, handleLogout,loading } = useAuth(); // Access user and logout function from AuthContext
+  const { user, handleLogout, loading } = useAuth();
 
-  // Toggle dropdown visibility
   const toggleDropdown = () => setShowDropdown(!showDropdown);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -22,67 +20,55 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  console.log("Navbar rendering. User:", user, "Loading:", loading);
-
-  useEffect(() => {
-    console.log("Navbar rendering. User:", user, "Loading:", loading);
-  }, [user, loading]);
-  
-
 
   return (
-    <div className="bg-gray-800 text-white p-4 h-16 flex items-center justify-between">
+    <div className="bg-gray-900 backdrop-blur-md shadow-lg text-white px-6 h-16 flex items-center justify-between">
       {/* Logo */}
-      <h1 className="text-3xl font-bold">NeXus</h1>
+      <h1 className="text-3xl font-extrabold tracking-tight bg-white text-transparent bg-clip-text">
+        NeXus
+      </h1>
 
       {/* Navigation Links */}
-      <div className="flex space-x-5">
-        <Link to="/" className="hover:text-gray-300">Home</Link>
-        <Link to="/browser" className="hover:text-gray-300">Articles</Link>
+      <div className="flex items-center space-x-6 text-lg font-medium">
+        <Link to="/" className="hover:text-orange-300 transition duration-200">Home</Link>
+        <Link to="/browser" className="hover:text-orange-300 transition duration-200">Articles</Link>
 
-        {/* Authenticated User Section */}
         {loading ? null : user ? (
           <div className="relative flex items-center space-x-4" ref={dropdownRef}>
-            {/* Submit Button */}
-            <Link to="/submit" className="hover:text-gray-300">
-              <span className="px-3 py-2 bg-green-400 rounded-3xl text-md font-semibold">
+            <Link to="/submit">
+              <span className="px-4 py-2 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-black font-semibold hover:scale-105 transition-transform">
                 Submit
               </span>
             </Link>
 
-            {/* Profile Icon & Dropdown */}
-            <button
-              onClick={toggleDropdown}
-              className="flex items-center space-x-2 hover:text-gray-300"
-            >
-              <CircleUser size={24} />
+            <button onClick={toggleDropdown} className="hover:text-orange-300 transition duration-200">
+              <CircleUser size={28} />
             </button>
 
             {showDropdown && (
-              <div className="absolute right-0 top-5 mt-2 w-40 bg-white text-black shadow-md z-50 rounded-lg border">
+              <div className="absolute right-0 top-14 w-44 bg-white/90 backdrop-blur-md text-black rounded-lg shadow-md border border-gray-300 z-50">
                 <Link
                   to="/profile"
-                  className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
+                  className="flex items-center gap-2 px-4 py-3 hover:bg-gray-100 rounded-t-md"
                 >
-                  <User size={16} />
+                  <User size={18} />
                   Profile
                 </Link>
                 <button
-                  className="flex w-full items-center gap-2 px-4 py-2 text-red-500 hover:bg-gray-100"
+                  className="flex w-full items-center gap-2 px-4 py-3 text-red-500 hover:bg-gray-100 rounded-b-md"
                   onClick={async () => {
                     await handleLogout();
                     navigate("/login");
                   }}
                 >
-                  <LogOut size={16} />
+                  <LogOut size={18} />
                   Logout
                 </button>
               </div>
             )}
           </div>
         ) : (
-          // Login Link for Unauthenticated Users
-          <Link to="/login" className="hover:text-gray-300">Login</Link>
+          <Link to="/login" className="hover:text-orange-300 transition duration-200">Login</Link>
         )}
       </div>
     </div>
