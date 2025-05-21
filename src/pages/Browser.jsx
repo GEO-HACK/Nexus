@@ -29,7 +29,8 @@ const Browser = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const categoriesData = await getCategories();
+        const response = await getCategories();
+        const categoriesData = response.data || []; // Default to an empty array if data is undefined
         console.log("this are the categories", categoriesData);
 
         // Add an "All" option at the start
