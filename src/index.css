@@ -1,7 +1,1 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
-
-.custom-z-1000 {
-  z-index: 1000;
-}
+@import 'tailwindcss'
