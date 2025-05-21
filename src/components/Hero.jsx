@@ -26,7 +26,7 @@ const Hero = () => {
   });
 
   return (
-    <section className="relative bg-gradient-to-br from-[#0f2027] via-[#203a43] to-[#2c5364] text-white py-24 px-6 md:px-12 text-center overflow-hidden">
+    <section className="relative bg-gradient-to-br from-[#0f2027] via-[#203a43] to-[#2c5364] text-white py-24 px-6 md:px-12 text-center ">
 
       {/* Blurred Background Lights */}
       <div className="absolute inset-0 pointer-events-none">

@@ -15,74 +15,53 @@ const AuthForm = () => {
   const [welcome, setWelcome] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
+  setLoading(true);
 
-    let response;
-    if (isSignup) {
-      if (
-        !fname ||
-        !lname ||
-        !institution ||
-        !username ||
-        !email ||
-        !password
-      ) {
-        setError("All fields are required for signup");
-        setLoading(false);
-
-        return;
-      }
-
-      console.log(
-        "form data",
-        fname,
-        lname,
-        institution,
-        username,
-        email,
-        password
-      );
-
-      response = await signup(
-        institution,
-        fname,
-        lname,
-        username,
-        email,
-        password
-      );
-    } else {
-      if (!email || !password) {
-        setError("Email and password are required for login");
-        setLoading(false);
-        return;
-      }
-      response = await login(email, password);
+  let response;
+  if (isSignup) {
+    if (!fname || !lname || !institution || !username || !email || !password) {
+      setError("All fields are required for signup");
+      setLoading(false);
+      return;
     }
+    response = await signup(institution, fname, lname, username, email, password);
+  } else {
+    if (!email || !password) {
+      setError("Email and password are required for login");
+      setLoading(false);
+      return;
+    }
+    response = await login(email, password);
+  }
 
-    setLoading(false);
+  setLoading(false);
 
-    if (response.error) {
-      setError(response.error);
-    } else {
-      console.log("Success:", response);
-
-      // Store user data in localStorage
+  if (response.error) {
+    setError(response.error);
+  } else {
+    // Save token and user only if they exist
+    if (response.user && response.token) {
       localStorage.setItem("user", JSON.stringify(response.user));
-      localStorage.setItem("token", response.token); // Ensure token is stored
-
-      // Display Welcome Message
-      setWelcome(`Welcome ${response.user.fname} ${response.user.lname}`);
-
-      // Wait for context update before navigating
-      setTimeout(() => {
-        navigate("/"); // or navigate("/submit");
-      }, 100); // slight delay allows context update
+      localStorage.setItem("token", response.token);
     }
-  };
+
+    setWelcome(`Welcome ${response.user?.fname || ""} ${response.user?.lname || ""}!`);
+
+    // Redirect after short delay to show message
+    setTimeout(() => {
+      navigate("/");
+    }, 1500);
+
+    // Optional: clear welcome message after 4 seconds
+    setTimeout(() => {
+      setWelcome("");
+    }, 4000);
+  }
+};
+
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">

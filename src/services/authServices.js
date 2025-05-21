@@ -22,7 +22,7 @@ export const login = async (email, password) => {
 // 🔹 Signup function
 export const signup = async (institution, fname, lname, username, email, password) => {
     try {
-        const response = await axios.post(`${BASE_URL}/register`, {
+        const response = await axios.post(`${BASE_URL}/auth/register`, {
             institution,
             fname,
             lname,
@@ -31,8 +31,13 @@ export const signup = async (institution, fname, lname, username, email, passwor
             password,
         });
 
+    
+        // If token and user exist in response, store them like login
         if (response.data.token) {
             localStorage.setItem("token", response.data.token);
+        }
+        if (response.data.user) {
+            localStorage.setItem("user", JSON.stringify(response.data.user));
         }
 
         console.log("Signup Response:", response.data);
