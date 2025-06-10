@@ -31,7 +31,7 @@ const Browser = () => {
     const fetchCategories = async () => {
       try {
         const response = await getCategories();
-        const categoriesData = response.data.data || []; // Default to an empty array if data is undefined
+        const categoriesData = response.data || []; // Default to an empty array if data is undefined
         console.log("this are the categories", categoriesData);
 
         // Add an "All" option at the start
