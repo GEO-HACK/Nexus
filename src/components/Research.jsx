@@ -11,7 +11,7 @@ const ResearchPapers = () => {
       try {
         const response = await getPapers();
         console.log("Fetched papers:", response.data);
-        setPapers(response.data.data); // Assuming the API returns papers in `response.data`
+        setPapers(response.data); // Assuming the API returns papers in `response.data`
       } catch (error) {
         console.error("Error fetching research papers:", error);
       }
@@ -42,7 +42,7 @@ const ResearchPapers = () => {
               <h3 className="text-xl font-semibold text-gray-900">{paper.paper_name}</h3>
             </div>
             <p className="text-gray-500 text-sm mt-1">
-              Category ID: {paper.category_id} • Publisher ID: {paper.publisher_id}
+              Category ID: {paper._id} • Publisher ID: {paper._id}
             </p>
             <p className="mt-3 text-gray-700 text-sm">
               {paper.description.length > 100

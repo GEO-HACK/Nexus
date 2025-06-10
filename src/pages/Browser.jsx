@@ -32,12 +32,16 @@ const Browser = () => {
       try {
         const response = await getCategories();
         const categoriesData = response.data || []; // Default to an empty array if data is undefined
-        console.log("this are the categories", categoriesData);
+        console.log("this are the categories that are in the database", categoriesData);
 
-        // Add an "All" option at the start
+       //mapping to the expected fromat
+       const mappedCategories = categoriesData.map((cat) => ({
+          _id: cat._id,
+          category: cat.category_name,
+       }))
         setCategories([
-          { category_id: "All", category: "All" }, // Add 'All' category for global filtering
-          ...categoriesData, // Categories from API
+          { _id: "All", category: "All" }, 
+          ...mappedCategories, 
         ]);
       } catch (err) {
         console.error("Error fetching categories:", err);

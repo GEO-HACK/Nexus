@@ -1,4 +1,5 @@
-const Sidebar = ({ categories, selectedCategory, setSelectedCategory }) => {
+const Sidebar = ({ categories, selectedCategory, setSelectedCategory }) => 
+  {
   return (
     <aside className="w-1/4 bg-white px-6 py-6 shadow-lg rounded-lg h-full overflow-scroll">
       <h1 className="text-lg font-bold mb-4 text-gray-800">Filter By Categories</h1>
@@ -6,7 +7,7 @@ const Sidebar = ({ categories, selectedCategory, setSelectedCategory }) => {
         {/* Render categories dynamically */}
         {categories.map((category) => (
           <li
-            key={category.category_id} // Use category_id for uniqueness
+            key={category._id} // Use category_id for uniqueness
             className={`py-2 px-4 rounded-md cursor-pointer font-medium transition-all duration-200 ${
               selectedCategory === category.category_id
                 ? "bg-blue-100 text-blue-600 font-semibold"
