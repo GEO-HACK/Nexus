@@ -11,7 +11,7 @@ const ResearchPapers = () => {
       try {
         const response = await getPapers();
         console.log("Fetched papers:", response.data);
-        setPapers(response.data); // Assuming the API returns papers in `response.data`
+        setPapers(response); // Assuming the API returns papers in `response.data`
       } catch (error) {
         console.error("Error fetching research papers:", error);
       }
@@ -60,7 +60,7 @@ const ResearchPapers = () => {
               ))}
             </div>
             <a
-              href={`/browser/${paper.paper_id}`}
+              href={`/browser/${paper._id}`}
               className="mt-4 inline-flex items-center text-blue-600 font-medium hover:underline"
             >
               Read More <ArrowRight className="ml-1" size={18} />

@@ -38,6 +38,7 @@ const Browser = () => {
        const mappedCategories = categoriesData.map((cat) => ({
           _id: cat._id,
           category: cat.category_name,
+          category_id: cat._id, // Assuming each category has a unique _id
        }))
         setCategories([
           { _id: "All", category: "All" }, 
