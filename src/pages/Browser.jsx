@@ -16,8 +16,9 @@ const Browser = () => {
     const fetchPapers = async () => {
       try {
         const papers = await getPapers();
-        setResearchPapers(papers.data || []); // Default to an empty array if data is undefined
-        setFilteredPapers(papers.data || []); // Default to an empty array if data is undefined
+        setResearchPapers(papers || []); 
+        setFilteredPapers(papers || []);
+       
       } catch (err) {
         console.error("Error fetching papers:", err);
       }
@@ -30,7 +31,7 @@ const Browser = () => {
     const fetchCategories = async () => {
       try {
         const response = await getCategories();
-        const categoriesData = response.data || []; // Default to an empty array if data is undefined
+        const categoriesData = response.data.data || []; // Default to an empty array if data is undefined
         console.log("this are the categories", categoriesData);
 
         // Add an "All" option at the start
@@ -51,7 +52,7 @@ const Browser = () => {
       .filter((paper) =>
         selectedCategory === "All" // If 'All' category is selected, show all papers
           ? true
-          : paper.category_id === selectedCategory // Filter by category_id
+          : paper._id === selectedCategory // Filter by category_id
       )
       .filter(
         (paper) =>

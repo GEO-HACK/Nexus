@@ -10,7 +10,8 @@ const ResearchPapers = () => {
     const fetchPapers = async () => {
       try {
         const response = await getPapers();
-        setPapers(response.data); // Assuming the API returns papers in `response.data`
+        console.log("Fetched papers:", response.data);
+        setPapers(response.data.data); // Assuming the API returns papers in `response.data`
       } catch (error) {
         console.error("Error fetching research papers:", error);
       }
@@ -33,7 +34,7 @@ const ResearchPapers = () => {
       <div className="mt-8 grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
         {papers.slice(0, 3).map((paper) => (
           <div
-            key={paper.paper_id}
+            key={paper._id}
             className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300"
           >
             <div className="flex items-center space-x-3">
@@ -49,7 +50,7 @@ const ResearchPapers = () => {
                 : paper.description}
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
-              {JSON.parse(paper.tags).map((tag, index) => (
+              {paper.tags && paper.tags.map((tag, index) => (
                 <span
                   key={index}
                   className="bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"

@@ -44,7 +44,7 @@ const PaperDetails = ({ paper, categoryName, publisherName }) => {
         </p>
         <p className="mt-2 text-sm">
           Published on:{" "}
-          {new Date(paper.created_at).toLocaleDateString("en-US", {
+          {new Date(paper.createdAt).toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
             day: "numeric",

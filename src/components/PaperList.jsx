@@ -13,12 +13,12 @@ const PaperList = ({ filteredPapers }) => {
         {filteredPapers.map((paper) => (
           <div className="bg-white p-4 mb-4 shadow-md" key={paper.paper_id}>
             {/* Internal navigation link */}
-            <Link to={`/browser/${paper.paper_id}`} className="text-blue-600 hover:underline">
+            <Link to={`/browser/${paper._id}`} className="text-blue-600 hover:underline">
               <h2 className="text-lg font-semibold">{paper.paper_name}</h2>
             </Link>
 
             <p className="text-sm text-blue-500">
-              Published: {new Date(paper.created_at).toLocaleDateString()}
+              Published: {new Date(paper.createdAt).toLocaleDateString()}
             </p>
 
             {/* External link for downloading */}
