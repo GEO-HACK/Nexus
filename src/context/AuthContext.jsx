@@ -33,18 +33,19 @@ export const AuthProvider = ({ children }) => {
 
   const handleLogin = async (email, password) => {
     const response = await login(email, password);
-    
+
     if (response.token) {
       const userData = {
         email: response.user.email,
         username: response.user.username,
         // add more fields if needed
       };
-  
+
       localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
+      setLoading(false); // <-- Add this line
     }
-  
+
     return response;
   };
   

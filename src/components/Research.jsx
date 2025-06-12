@@ -2,8 +2,23 @@ import { FileText, ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getPapers } from "../services/paperServices";
 
+const tagColors = [
+  "bg-blue-200 text-blue-800",
+  "bg-green-200 text-green-800",
+  "bg-yellow-200 text-yellow-800",
+  "bg-red-200 text-red-800",
+  "bg-purple-200 text-purple-800",
+  "bg-pink-200 text-pink-800",
+  "bg-indigo-200 text-indigo-800",
+  "bg-teal-200 text-teal-800",
+  "bg-gray-200 text-gray-800",
+  "bg-orange-200 text-orange-800",
+  "bg-cyan-200 text-cyan-800",
+]
+
 const ResearchPapers = () => {
   const [papers, setPapers] = useState([]);
+  const randomColor = tagColors[Math.floor(Math.random() * tagColors.length)];
 
   // Fetching the papers from the API
   useEffect(() => {
@@ -41,9 +56,9 @@ const ResearchPapers = () => {
               <FileText size={24} className="text-blue-600" />
               <h3 className="text-xl font-semibold text-gray-900">{paper.paper_name}</h3>
             </div>
-            <p className="text-gray-500 text-sm mt-1">
+            {/* <p className="text-gray-500 text-sm mt-1">
               Category ID: {paper._id} • Publisher ID: {paper._id}
-            </p>
+            </p> */}
             <p className="mt-3 text-gray-700 text-sm">
               {paper.description.length > 100
                 ? paper.description.slice(0, 100) + "..."
@@ -53,7 +68,7 @@ const ResearchPapers = () => {
               {paper.tags && paper.tags.map((tag, index) => (
                 <span
                   key={index}
-                  className="bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
+                  className={`${randomColor} px-3 py-1 rounded-full text-sm font-medium`}
                 >
                   #{tag}
                 </span>
