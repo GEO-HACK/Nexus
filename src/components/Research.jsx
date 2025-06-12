@@ -10,8 +10,8 @@ const ResearchPapers = () => {
     const fetchPapers = async () => {
       try {
         const response = await getPapers();
-        console.log("Fetched papers:", response.data);
-        setPapers(response); // Assuming the API returns papers in `response.data`
+        console.log("Fetched papers:", response);
+        setPapers(response || []); // Assuming the API returns papers in `response.data`
       } catch (error) {
         console.error("Error fetching research papers:", error);
       }

@@ -20,10 +20,10 @@ export const login = async (email, password) => {
 };
 
 // 🔹 Signup function
-export const signup = async (institution, fname, lname, username, email, password) => {
+export const signup = async (institutionName, fname, lname, username, email, password) => {
     try {
         const response = await axios.post(`${BASE_URL}/auth/register`, {
-            institution,
+            institutionName,
             fname,
             lname,
             username,
