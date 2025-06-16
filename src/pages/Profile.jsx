@@ -130,7 +130,7 @@ const Profile = () => {
         <div className="bg-white shadow-lg rounded-lg p-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Your Papers</h2>
           {error && <p className="text-red-500 mb-4">{error}</p>}
-          {papers.length > 0 ? (
+          { (
             papers.map((paper) => (
               <div
                 key={paper.paper_id}
@@ -163,8 +163,6 @@ const Profile = () => {
                 </div>
               </div>
             ))
-          ) : (
-            <p className="text-gray-500">No papers found.</p>
           )}
         </div>
       </div>
