@@ -101,14 +101,18 @@ const PaperDetails = ({ paper, categoryName, publisherName }) => {
           <section>
             <h2 className="text-xl font-semibold text-gray-800">Tags</h2>
             <div className="mt-2 flex flex-wrap gap-2">
-            {JSON.parse(paper.tags).map((tag, index) => (
-                <span
-                  key={index}
-                  className="bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
-                >
-                  #office
-                </span>
-              ))}
+            {Array.isArray(paper.tags) && paper.tags.length > 0 ? (
+      paper.tags.map((tag, index) => (
+        <span
+          key={index}
+          className="bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
+        >
+          #{tag}
+        </span>
+      ))
+    ) : (
+      <span className="text-gray-500">No tags available.</span>
+    )}
             </div>
           </section>
         ) : (
@@ -119,10 +123,16 @@ const PaperDetails = ({ paper, categoryName, publisherName }) => {
         )}
 
         {/* Metadata */}
-        {paper.meta && (
+        {paper.meta && typeof paper.meta === "object" && Object.keys(paper.meta).length > 0 && (
           <section>
             <h2 className="text-xl font-semibold text-gray-800">Metadata</h2>
-            <p className="mt-2 text-gray-700">{paper.meta}</p>
+            <ul className="mt-2 text-gray-700">
+              {Object.entries(paper.meta).map(([key, value]) => (
+                <li key={key}>
+                  <span className="font-semibold">{key}:</span> {value}
+                </li>
+              ))}
+            </ul>
           </section>
         )}
       </div>

@@ -18,7 +18,7 @@ const SinglePage = () => {
   const { id } = useParams();
   const [paper, setPaper] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [tags, setTags] = useState([]);
+  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -36,10 +36,8 @@ const SinglePage = () => {
 
         setPaper(paperData);
         setCategories(categoriesData.data);
-        setTags(tagsData.data);
-        console.log("this are the categories fetched:", categoriesData.data);
-        console.log("this are the tags fetched:", tagsData.data);
-        console.log("this is the paper fetched:", paperData);
+       
+    
     
         setLoading(false);
       } catch (error) {
@@ -64,13 +62,8 @@ const SinglePage = () => {
     (cat) => cat.category_id === paper.category_id
   );
 
-  const tagNames = Array.isArray(paper.tags)
-    ? paper.tags.map((tagId) => {
-        const tagMatch = tags.find((t) => t.tag_id === tagId);
-        return tagMatch ? tagMatch.name : "Unknown";
-      })
-    : [];
-  console.log("Tags:", tagNames);
+
+  
 
   const BASE_URL = "http://localhost:5000"; // Replace with your server's base URL
   const resolvedFileUrl = paper.file_url.startsWith("http")
@@ -153,6 +146,33 @@ const SinglePage = () => {
               </p>
             </div>
           )}
+
+          {/* Tags Section */}
+          <div className="mt-3 flex flex-wrap gap-2">
+            {paper.tags && paper.tags.map((tag, index) => {
+              // Optionally, assign a random color for each tag
+              const tagColors = [
+                "bg-blue-200 text-blue-800",
+                "bg-green-200 text-green-800",
+                "bg-pink-200 text-pink-800",
+                "bg-yellow-200 text-yellow-800",
+                "bg-purple-200 text-purple-800",
+                "bg-red-200 text-red-800",
+                "bg-indigo-200 text-indigo-800",
+                "bg-teal-200 text-teal-800",
+                "bg-orange-200 text-orange-800",
+              ];
+              const randomColor = tagColors[Math.floor(Math.random() * tagColors.length)];
+              return (
+                <span
+                  key={index}
+                  className={`${randomColor} px-3 py-1 rounded-full text-sm font-medium`}
+                >
+                  #{tag}
+                </span>
+              );
+            })}
+          </div>
         </>
       )}
     </div>
