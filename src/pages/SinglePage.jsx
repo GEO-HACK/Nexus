@@ -35,11 +35,12 @@ const SinglePage = () => {
         ]);
 
         setPaper(paperData);
-        setCategories(categoriesData);
+        setCategories(categoriesData.data);
         setTags(tagsData.data);
-        console.log("Fetched paper:", paperData);
-        console.log("Fetched categories:", categoriesData);
-        console.log("Fetched tags:", tagsData.data);
+        console.log("this are the categories fetched:", categoriesData.data);
+        console.log("this are the tags fetched:", tagsData.data);
+        console.log("this is the paper fetched:", paperData);
+    
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
