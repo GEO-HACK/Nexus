@@ -6,10 +6,27 @@ import EditModal from "../components/editModal"; // Import the EditModal compone
 
 const Profile = () => {
   const [user, setUser] = useState(null);
+  const [bio, setBio] = useState("");
+  const [photo, setPhoto] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
   const [papers, setPapers] = useState([]);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false); // Control modal visibility
   const [paperToEdit, setPaperToEdit] = useState(null); // Store the paper to edit
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    setPhoto(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setPhotoPreview(reader.result);
+      reader.readAsDataURL(file);
+    } else {
+      setPhotoPreview(null);
+    }
+  };
+
+  const handleBioChange = (e) => setBio(e.target.value);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -87,6 +104,39 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 px-6 py-8">
       <div className="max-w-5xl mx-auto">
+          <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Your Bio</h2>
+          <div className="flex flex-col items-center gap-4">
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">
+                Photo
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoChange}
+                className="mb-2"
+              />
+              {photoPreview && (
+                <img
+                  src={photoPreview}
+                  alt="Profile Preview"
+                  className="w-32 h-32 object-cover rounded-full border"
+                />
+              )}
+            </div>
+            <div className="w-full">
+              <label className="block text-gray-700 font-semibold mb-2">Bio</label>
+              <textarea
+                value={bio}
+                onChange={handleBioChange}
+                className="w-full border rounded-lg p-2"
+                rows={4}
+                placeholder="Tell us about yourself..."
+              />
+            </div>
+          </div>
+        </div>
         {/* Profile Card */}
         <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-4">Profile</h1>
@@ -126,8 +176,11 @@ const Profile = () => {
           </div>
         </div>
 
+        {/* Bio and Photo Section */}
+      
+
         {/* Papers Section */}
-        <div className="bg-white shadow-lg rounded-lg p-6">
+        {/* <div className="bg-white shadow-lg rounded-lg p-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Your Papers</h2>
           {error && <p className="text-red-500 mb-4">{error}</p>}
           { (
@@ -164,7 +217,7 @@ const Profile = () => {
               </div>
             ))
           )}
-        </div>
+        </div> */}
       </div>
 
       {/* Edit Modal */}
