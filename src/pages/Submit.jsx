@@ -30,11 +30,11 @@ const Submit = () => {
     const fetchData = async () => {
       try {
         const categoriesData = await getCategories();
-        setCategories(categoriesData || []);
+        setCategories(categoriesData.data || []);
+        console.log("Categories fetched:", categoriesData.data);
         const usersData = await getUsers();
         setUsers(usersData || []);
-        const tagsData = await getTags();
-        setAvailableTags(tagsData.data || []);
+      
       } catch (err) {
         console.error("Error fetching data:", err);
         setError("Failed to fetch data. Please try again.");
@@ -189,7 +189,7 @@ const Submit = () => {
               <option value="">Select Category</option>
               {categories.map((cat) => (
                 <option key={cat.category_id} value={cat.category_id}>
-                  {cat.category}
+                  {cat.category_name}
                 </option>
               ))}
             </select>
