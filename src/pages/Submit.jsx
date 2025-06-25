@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { UploadCloud } from "lucide-react";
 import { uploadPapers } from "../services/paperServices";
 import { getCategories } from "../services/categoriesServices";
-import { getUsers,getAllUsers } from "../services/userServices";
+import { getUsers, getAllUsers } from "../services/userServices";
 import { getTags } from "../services/tagServices";
 
 const Submit = () => {
@@ -20,7 +20,7 @@ const Submit = () => {
   const [users, setUsers] = useState([]);
   const [selectedCoauthors, setSelectedCoauthors] = useState([]);
   const [availableTags, setAvailableTags] = useState([]);
-  const [ successPopup, setSuccessPopup] = useState(false);
+  const [successPopup, setSuccessPopup] = useState(false);
 
   const token = localStorage.getItem("token");
 
@@ -30,12 +30,11 @@ const Submit = () => {
     const fetchData = async () => {
       try {
         const categoriesData = await getCategories();
-        setCategories(categoriesData.data || []);
-        console.log(categories);
+        setCategories(categoriesData.data|| []);
+        
         const usersData = await getAllUsers();
-        setUsers(usersData.data || []);
-        console.log("this are the users", users);
-      
+        setUsers(usersData || []);
+       
       } catch (err) {
         console.error("Error fetching data:", err);
         setError("Failed to fetch data. Please try again.");
@@ -43,11 +42,22 @@ const Submit = () => {
     };
     fetchData();
   }, []);
-  
-const handleCoauthorsChange = (e) => {
-    const options = Array.from(e.target.selectedOptions, option => option.value);
-    setCoauthors(options)
-}
+
+  // useEffect(() => {
+  //   console.log("this are the categories", categories);
+  // }, [categories]);
+
+  // useEffect(() => {
+  //   console.log("this are the users", users);
+  // }, [users]);
+
+  const handleCoauthorsChange = (e) => {
+    const selectedValues = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedCoauthors(selectedValues);
+  };
 
   const handleTagKeyDown = (e) => {
     if (["Enter", ","].includes(e.key)) {
@@ -70,22 +80,25 @@ const handleCoauthorsChange = (e) => {
     setSuccess("");
 
     //validation checks
-    if(title.trim().trim.length >15){
+    if (title.trim().trim.length > 15) {
       setError("Title must be at least 3 characters long.");
       return;
     }
-    if(description.trim().length < 20){
+    if (description.trim().length < 20) {
       setError("Description must be at least 20 characters long.");
       return;
     }
-   
-    
-    if (!file){
+
+    if (!file) {
       setError("Please select a file to upload.");
       return;
     }
 
-    const validFileTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+    const validFileTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
     if (!validFileTypes.includes(file.type)) {
       setError("Invalid file type. Only PDF, DOC, and DOCX are allowed.");
       return;
@@ -96,7 +109,7 @@ const handleCoauthorsChange = (e) => {
     formData.append("paper_name", title);
     formData.append("description", description);
     formData.append("category_id", category);
-   
+
     formData.append("tags", JSON.stringify(tags));
     formData.append(
       "coauthors",
@@ -117,7 +130,7 @@ const handleCoauthorsChange = (e) => {
       setTitle("");
       setDescription("");
       setCategory("");
-     
+
       setTags([]);
       setCoauthors("");
       setMeta("");
@@ -130,7 +143,6 @@ const handleCoauthorsChange = (e) => {
       );
     }
   };
- 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4 py-4">
@@ -185,7 +197,7 @@ const handleCoauthorsChange = (e) => {
             >
               <option value="">Select Category</option>
               {categories.map((cat) => (
-                <option key={cat._id} value={cat._id}>
+                <option key={cat._id} value={cat._id} className="capitalize px-3 p-5">
                   {cat.category_name}
                 </option>
               ))}
@@ -207,22 +219,6 @@ const handleCoauthorsChange = (e) => {
               <p className="text-red-600 text-sm mt-1">{error}</p>
             )}
           </div>
-{/* 
-          <div className="col-span-1">
-            <label className="block text-sm font-semibold text-gray-700">
-              Publisher *
-            </label>
-            <input
-              type="text"
-              value={publisher}
-              onChange={(e) => setPublisher(e.target.value)}
-              className="mt-1 w-full rounded-lg border px-3 py-2"
-              required
-            />
-            {error && error.includes("Publisher") && (
-              <p className="text-red-600 text-sm mt-1">{error}</p>
-            )}
-          </div> */}
 
           <div className="col-span-1">
             <label className="block text-sm font-semibold text-gray-700">
@@ -263,23 +259,20 @@ const handleCoauthorsChange = (e) => {
 
           <div className="col-span-1">
             <label className="block text-sm font-semibold text-gray-700">
-              Coauthors (comma-separated)
+              Coauthors
             </label>
-           <select
-            name="coathors"
-          
-            value={selectedCoauthors}
-            onChange={handleCoauthorsChange}
-            className="mt-1 w-full rounded-lg border px-3 py-2"
+            <select
+              name="coauthors"
+              multiple
+              value={selectedCoauthors} // <- should be an array of _id strings
+              onChange={handleCoauthorsChange}
+              className="mt-1 w-full rounded-lg border px-3 py-2"
             >
-              {
-                users.map(user=> (
-                  <option key={user._id} value={user._id}>
-                    {user.fname}
-                  </option>
-
-                ))
-              }
+              {users.map((user) => (
+                <option key={user._id} value={user._id} className="capitalize px-3 ">
+                  {user.fname} {user.lname}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -323,13 +316,11 @@ const handleCoauthorsChange = (e) => {
             </button>
           </div>
         </form>
-      {
-        successPopup && (
-          <div className = "fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+        {successPopup && (
+          <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
             <p className="text-sm font-semibold">File uploaded successfully!</p>
-            </div>
-        )
-      }
+          </div>
+        )}
       </div>
     </div>
   );
