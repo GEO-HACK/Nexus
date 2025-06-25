@@ -45,7 +45,13 @@ export const uploadPapers = async (formData, token) => {
 
 export const getPapersByUser = async (id) => {
     try {
-        const response = await axios.get(`${BASE_URL}/papers?publisher_id=${id}`);
+        const response = await axios.get(`${BASE_URL}/papers/my-papers`,{
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            }
+        });
+        console.log("Papers by user:", response.data);
+
         return response.data;
     } catch (err) {
         console.error("Error fetching papers by user:", err);

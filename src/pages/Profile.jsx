@@ -40,7 +40,7 @@ const Profile = () => {
   const fetchUserPapers = async (userId) => {
     try {
       const userPapers = await getPapersByUser(userId);
-      setPapers(userPapers.data);
+      setPapers(userPapers.papers);
     } catch (err) {
       console.error("Error fetching user papers:", err);
       setError("Failed to fetch user papers");
@@ -180,13 +180,13 @@ const Profile = () => {
       
 
         {/* Papers Section */}
-        {/* <div className="bg-white shadow-lg rounded-lg p-6">
+        <div className="bg-white shadow-lg rounded-lg p-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Your Papers</h2>
           {error && <p className="text-red-500 mb-4">{error}</p>}
           { (
             papers.map((paper) => (
               <div
-                key={paper.paper_id}
+                key={paper._id}
                 className="flex items-center justify-between bg-gray-50 p-4 rounded-lg mb-4 shadow-sm hover:shadow-md transition-shadow"
               >
                 <div>
@@ -217,7 +217,7 @@ const Profile = () => {
               </div>
             ))
           )}
-        </div> */}
+        </div>
       </div>
 
       {/* Edit Modal */}
