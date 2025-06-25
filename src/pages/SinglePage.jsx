@@ -65,10 +65,11 @@ const SinglePage = () => {
 
   
 
-  const BASE_URL = "http://localhost:5000"; // Replace with your server's base URL
+  const BASE_URL =import.meta.env.VITE_API_URL;// or your production URL
+ 
   const resolvedFileUrl = paper.file_url.startsWith("http")
     ? paper.file_url
-    : `${BASE_URL}${paper.file_url.replace("../uploads", "/uploads")}`;
+    : `${BASE_URL.replace(/\/api\/?$/, "")}${paper.file_url.replace("../uploads", "/uploads")}`;
   console.log("Resolved File URL:", resolvedFileUrl);
 
   return (

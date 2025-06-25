@@ -68,9 +68,8 @@ const Browser = () => {
           )
       );
     setFilteredPapers(filtered);
-  }, [selectedCategory, searchTerm, researchPapers]);
-
-  console.log("Filtered Papers:", filteredPapers);
+  }, [selectedCategory, searchTerm, researchPapers])
+  
 
   return (
     <div className="flex h-screen bg-gray-100 p-4 gap-4">
