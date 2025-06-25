@@ -269,7 +269,7 @@ const Submit = () => {
               className="mt-1 w-full rounded-lg border px-3 py-2"
             >
               {users.map((user) => (
-                <option key={user._id} value={user._id} className="capitalize px-3 ">
+                <option key={user._id} value={user._id} className="capitalize px-3 font-semibold text-green-700">
                   {user.fname} {user.lname}
                 </option>
               ))}

@@ -32,7 +32,6 @@ const Browser = () => {
       try {
         const response = await getCategories();
         const categoriesData = response.data || []; // Default to an empty array if data is undefined
-        console.log("this are the categories that are in the database", categoriesData);
 
        //mapping to the expected fromat
        const mappedCategories = categoriesData.map((cat) => ({
@@ -57,7 +56,7 @@ const Browser = () => {
       .filter((paper) =>
         selectedCategory === "All" // If 'All' category is selected, show all papers
           ? true
-          : paper._id === selectedCategory // Filter by category_id
+          : paper.category_id === selectedCategory // Filter by category_id
       )
       .filter(
         (paper) =>
