@@ -40,7 +40,7 @@ const Browser = () => {
           category_id: cat._id, // Assuming each category has a unique _id
        }))
         setCategories([
-          { _id: "All", category: "All" }, 
+          { category_id: "All", category: "All" }, 
           ...mappedCategories, 
         ]);
       } catch (err) {
