@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { UploadCloud } from "lucide-react";
 import { uploadPapers } from "../services/paperServices";
 import { getCategories } from "../services/categoriesServices";
-import { getUsers } from "../services/userServices";
+import { getUsers,getAllUsers } from "../services/userServices";
 import { getTags } from "../services/tagServices";
 
 const Submit = () => {
@@ -18,6 +18,7 @@ const Submit = () => {
   const [success, setSuccess] = useState("");
   const [categories, setCategories] = useState([]);
   const [users, setUsers] = useState([]);
+  const [selectedCoauthors, setSelectedCoauthors] = useState([]);
   const [availableTags, setAvailableTags] = useState([]);
   const [ successPopup, setSuccessPopup] = useState(false);
 
@@ -31,8 +32,9 @@ const Submit = () => {
         const categoriesData = await getCategories();
         setCategories(categoriesData.data || []);
         console.log(categories);
-        const usersData = await getUsers();
-        setUsers(usersData || []);
+        const usersData = await getAllUsers();
+        setUsers(usersData.data || []);
+        console.log("this are the users", users);
       
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -42,12 +44,10 @@ const Submit = () => {
     fetchData();
   }, []);
   
-
-  // const handleAddTag = (tag) => {
-  //   if (tag && !tags.includes(tag)) {
-  //     setTags([...tags, tag]);
-  //   }
-  // };
+const handleCoauthorsChange = (e) => {
+    const options = Array.from(e.target.selectedOptions, option => option.value);
+    setCoauthors(options)
+}
 
   const handleTagKeyDown = (e) => {
     if (["Enter", ","].includes(e.key)) {
@@ -265,12 +265,22 @@ const Submit = () => {
             <label className="block text-sm font-semibold text-gray-700">
               Coauthors (comma-separated)
             </label>
-            <input
-              type="text"
-              value={coauthors}
-              onChange={(e) => setCoauthors(e.target.value)}
-              className="mt-1 w-full rounded-lg border px-3 py-2"
-            />
+           <select
+            name="coathors"
+          
+            value={selectedCoauthors}
+            onChange={handleCoauthorsChange}
+            className="mt-1 w-full rounded-lg border px-3 py-2"
+            >
+              {
+                users.map(user=> (
+                  <option key={user._id} value={user._id}>
+                    {user.fname}
+                  </option>
+
+                ))
+              }
+            </select>
           </div>
 
           <div className="col-span-1">
