@@ -10,7 +10,6 @@ const Submit = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-  const [publisher, setPublisher] = useState("");
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
   const [coauthors, setCoauthors] = useState("");
@@ -31,7 +30,7 @@ const Submit = () => {
       try {
         const categoriesData = await getCategories();
         setCategories(categoriesData.data || []);
-        console.log("Categories fetched:", categoriesData.data);
+        console.log(categories);
         const usersData = await getUsers();
         setUsers(usersData || []);
       
@@ -71,7 +70,7 @@ const Submit = () => {
     setSuccess("");
 
     //validation checks
-    if(title.trim().trim.length < 3){
+    if(title.trim().trim.length >15){
       setError("Title must be at least 3 characters long.");
       return;
     }
@@ -79,10 +78,8 @@ const Submit = () => {
       setError("Description must be at least 20 characters long.");
       return;
     }
-    if (!publisher.trim()){
-      setError("Publisher field cannot be empty.");
-      return;
-    }
+   
+    
     if (!file){
       setError("Please select a file to upload.");
       return;
@@ -96,10 +93,10 @@ const Submit = () => {
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("name", title);
+    formData.append("paper_name", title);
     formData.append("description", description);
-    formData.append("category", Number(category));
-    formData.append("publisher", Number(publisher));
+    formData.append("category_id", category);
+   
     formData.append("tags", JSON.stringify(tags));
     formData.append(
       "coauthors",
@@ -120,7 +117,7 @@ const Submit = () => {
       setTitle("");
       setDescription("");
       setCategory("");
-      setPublisher("");
+     
       setTags([]);
       setCoauthors("");
       setMeta("");
@@ -188,7 +185,7 @@ const Submit = () => {
             >
               <option value="">Select Category</option>
               {categories.map((cat) => (
-                <option key={cat.category_id} value={cat.category_id}>
+                <option key={cat._id} value={cat._id}>
                   {cat.category_name}
                 </option>
               ))}
@@ -210,7 +207,7 @@ const Submit = () => {
               <p className="text-red-600 text-sm mt-1">{error}</p>
             )}
           </div>
-
+{/* 
           <div className="col-span-1">
             <label className="block text-sm font-semibold text-gray-700">
               Publisher *
@@ -225,7 +222,7 @@ const Submit = () => {
             {error && error.includes("Publisher") && (
               <p className="text-red-600 text-sm mt-1">{error}</p>
             )}
-          </div>
+          </div> */}
 
           <div className="col-span-1">
             <label className="block text-sm font-semibold text-gray-700">
