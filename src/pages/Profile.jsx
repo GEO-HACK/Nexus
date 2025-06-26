@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getPapersByUser, deletePapers } from "../services/paperServices";
+import { getPapersByUser, deletePapers,updatePaper } from "../services/paperServices";
 import { Link } from "react-router-dom";
 import { FiEdit, FiTrash } from "react-icons/fi";
 import EditModal from "../components/editModal"; // Import the EditModal component
@@ -46,7 +46,7 @@ const Profile = () => {
       setError("Failed to fetch user papers");
     }
   };
-  console.log("this are the user papers", papers);
+ ;
 
   const handleEdit = (paperId) => {
     const selectedPaper = papers.find((paper) => paper._id === paperId);
@@ -83,10 +83,9 @@ const Profile = () => {
   const handleEditSubmit = async (formData) => {
     try {
       // Call the API to update the paper
-      console.log("Updated paper data:", formData);
-      // You can call the edit API here and update the state accordingly
+      await updatePaper(formData)
       await fetchUserPapers(user.id); // Refresh the papers after editing
-      setIsModalOpen(false); // Close the modal after submission
+      setIsModalOpen(false); 
     } catch (err) {
       console.error("Error updating paper:", err);
       setError("Failed to update the paper");

@@ -87,9 +87,9 @@ useEffect(() => {
         return;
     }
 
-    // Construct the JSON payload
+    console.log("this is the paper id", paperData._id);
     const payload = {
-        id: paperData.paper_id, // Include the paper ID
+        _id: paperData._id, // Include the paper ID
         category, // Include the category ID
         publisher: paperData.publisher_id, // Include the publisher ID
         name: title, // Include the paper name
@@ -119,7 +119,7 @@ useEffect(() => {
   console.log("this is the form ", {
     title,
     description,
-
+    
     category,
     tags,
   });
