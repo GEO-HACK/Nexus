@@ -22,7 +22,8 @@ const EditModal = ({ isOpen, onClose, onSubmit, paperData }) => {
     const fetchCategories = async () => {
       try {
         const response = await getCategories(); // Fetch categories from the API
-        setCategories(response|| []); // Set the categories in state
+        setCategories(response.data|| []); // Set the categories in state
+        console.log("Fetched categories:", response.data);
       } catch (err) {
         console.error("Error fetching categories:", err);
         setError("Failed to fetch categories.");
@@ -170,8 +171,8 @@ useEffect(() => {
             >
               <option value="">Select Category</option>
               {categories.map((cat) => (
-                <option key={cat.category_id} value={cat.category_id}>
-                  {cat.category}
+                <option key={cat._id} value={cat._id}>
+                  {cat.category_name}
                 </option>
               ))}
             </select>

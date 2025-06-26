@@ -36,7 +36,7 @@ const Browser = () => {
           category_id: cat._id,
         }));
 
-        setCategories([{ category_id: "All", category: "All" }, ...mappedCategories]);
+        setCategories([{ _id: "All", category: "All" }, ...mappedCategories]);
       } catch (err) {
         console.error("Error fetching categories:", err);
       }
@@ -69,7 +69,7 @@ const Browser = () => {
 
       <main className="w-full md:flex-1 bg-white px-4 py-4 shadow-md rounded-md h-full overflow-y-auto">
         {/* Search Bar */}
-        <div className="sticky top-0 bg-white z-10 pb-4">
+        <div className=" bg-white  pb-4">
           <input
             type="text"
             placeholder="Search papers..."

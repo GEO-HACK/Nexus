@@ -49,7 +49,7 @@ const Profile = () => {
   console.log("this are the user papers", papers);
 
   const handleEdit = (paperId) => {
-    const selectedPaper = papers.find((paper) => paper.paper_id === paperId);
+    const selectedPaper = papers.find((paper) => paper._id === paperId);
     if (!selectedPaper) {
       console.error("Paper not found for editing:", paperId);
       return;
@@ -65,7 +65,7 @@ const Profile = () => {
 
       // Update the state for the deleted paper
       setPapers((prevPapers) =>
-        prevPapers.filter((paper) => paper.paper_id !== paperId)
+        prevPapers.filter((paper) => paper._id !== paperId)
       );
 
       console.log(`Deleted paper with ID: ${paperId}`);
@@ -205,13 +205,13 @@ const Profile = () => {
                 </div>
                 <div className="flex space-x-4">
                   <button
-                    onClick={() => handleEdit(paper.paper_id)}
+                    onClick={() => handleEdit(paper._id)}
                     className="text-blue-500 hover:text-blue-700"
                   >
                     <FiEdit size={20} />
                   </button>
                   <button
-                    onClick={() => handleDelete(paper.paper_id)}
+                    onClick={() => handleDelete(paper._id)}
                     className="text-red-500 hover:text-red-700"
                   >
                     <FiTrash size={20} />
