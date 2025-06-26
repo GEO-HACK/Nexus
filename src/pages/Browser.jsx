@@ -11,14 +11,12 @@ const Browser = () => {
   const [filteredPapers, setFilteredPapers] = useState([]);
   const [categories, setCategories] = useState([]);
 
-  // Fetching the papers on mount
   useEffect(() => {
     const fetchPapers = async () => {
       try {
         const papers = await getPapers();
-        setResearchPapers(papers || []); 
+        setResearchPapers(papers || []);
         setFilteredPapers(papers || []);
-       
       } catch (err) {
         console.error("Error fetching papers:", err);
       }
@@ -26,23 +24,19 @@ const Browser = () => {
     fetchPapers();
   }, []);
 
-  // Fetching the categories on mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await getCategories();
-        const categoriesData = response.data || []; // Default to an empty array if data is undefined
+        const categoriesData = response.data || [];
 
-       //mapping to the expected fromat
-       const mappedCategories = categoriesData.map((cat) => ({
+        const mappedCategories = categoriesData.map((cat) => ({
           _id: cat._id,
           category: cat.category_name,
-          category_id: cat._id, // Assuming each category has a unique _id
-       }))
-        setCategories([
-          { category_id: "All", category: "All" }, 
-          ...mappedCategories, 
-        ]);
+          category_id: cat._id,
+        }));
+
+        setCategories([{ category_id: "All", category: "All" }, ...mappedCategories]);
       } catch (err) {
         console.error("Error fetching categories:", err);
       }
@@ -50,52 +44,46 @@ const Browser = () => {
     fetchCategories();
   }, []);
 
-  // Filtering the papers whenever category is selected or search term is inputted
   useEffect(() => {
     const filtered = researchPapers
       .filter((paper) =>
-        selectedCategory === "All" // If 'All' category is selected, show all papers
-          ? true
-          : paper.category_id === selectedCategory // Filter by category_id
+        selectedCategory === "All" ? true : paper.category_id === selectedCategory
       )
       .filter(
         (paper) =>
-          (paper.paper_name?.toLowerCase() || "").includes(
-            searchTerm.toLowerCase()
-          ) ||
-          (paper.description?.toLowerCase() || "").includes(
-            searchTerm.toLowerCase()
-          )
+          (paper.paper_name?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+          (paper.description?.toLowerCase() || "").includes(searchTerm.toLowerCase())
       );
     setFilteredPapers(filtered);
-  }, [selectedCategory, searchTerm, researchPapers])
-  
+  }, [selectedCategory, searchTerm, researchPapers]);
 
   return (
-    <div className="flex h-screen bg-gray-100 p-4 gap-4">
-      {/* Sidebar component */}
-      <Sidebar
-        categories={categories}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-      />
-
-      {/* Main Content */}
-      <main className="w-3/4 bg-white px-6 py-4 shadow-md rounded-md h-full overflow-y-auto">
-        {/* Search Bar */}
-        <input
-          type="text"
-          placeholder="Search papers..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+    <div className="flex flex-col md:flex-row min-h-screen h-screen bg-gray-100 p-4 gap-4 overflow-hidden">
+      <aside className="w-full md:max-w-xs md:min-w-[200px]">
+        <Sidebar
+          categories={categories}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
         />
+      </aside>
+
+      <main className="w-full md:flex-1 bg-white px-4 py-4 shadow-md rounded-md h-full overflow-y-auto">
+        {/* Search Bar */}
+        <div className="sticky top-0 bg-white z-10 pb-4">
+          <input
+            type="text"
+            placeholder="Search papers..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md"
+          />
+        </div>
 
         {/* Paper List */}
         {filteredPapers.length > 0 ? (
           <PaperList filteredPapers={filteredPapers} />
         ) : (
-          <p className="text-center text-gray-500">No papers found.</p>
+          <p className="text-center text-gray-500 mt-4">No papers found.</p>
         )}
       </main>
     </div>
