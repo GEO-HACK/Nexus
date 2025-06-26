@@ -12,10 +12,14 @@ const PaperDetails = ({ paper, categoryName, users = [] }) => {
     "from-indigo-500 to-blue-400",
     "from-pink-500 to-rose-400",
   ];
-  const randomGradient = gradients[paper.paper_id % gradients.length];
-  console.log("this are the users", users);
 
-  // matching the name of the author using the  user id
+  const getStringHash = ((str) => 
+    str.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  )
+  const randomGradient = gradients[getStringHash(paper._id) % gradients.length];
+  
+
+
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
