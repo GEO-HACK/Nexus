@@ -20,10 +20,20 @@ const PaperList = ({ filteredPapers }) => {
             <p className="text-sm text-blue-500">
               Published: {new Date(paper.createdAt).toLocaleDateString()}
             </p>
+            <p className="font-semibold text-sm text-gray-600">
+              {paper.description.length > 100
+                ? `${paper.description.slice(0, 100)}...`
+                : paper.description}
+            </p>
 
             {/* External link for downloading */}
             <a
-              href={`http://localhost:5000/uploads${paper.file_url.replace("..", "")}`}
+              href={
+                paper.file_url.startsWith("http")
+                  ? paper.file_url
+                  : `${import.meta.env.VITE_API_URL.replace(/\/api\/?$/, "")}${paper.file_url.replace("../uploads", "/uploads")}`
+
+              }
               target="_blank"
               rel="noopener noreferrer"
               className="mt-2 text-blue-600 hover:underline inline-block"
