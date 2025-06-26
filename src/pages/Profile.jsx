@@ -182,8 +182,11 @@ const Profile = () => {
         {/* Papers Section */}
         <div className="bg-white shadow-lg rounded-lg p-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Your Papers</h2>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
-          { (
+         
+          { ( papers.length === 0 ) ? (
+            <p className="text-gray-500">No papers found. Start adding your research
+            </p>
+          ) : (
             papers.map((paper) => (
               <div
                 key={paper._id}
@@ -191,7 +194,7 @@ const Profile = () => {
               >
                 <div>
                   <h3 className="text-lg font-semibold text-blue-600 hover:underline">
-                    <Link to={`/browser/${paper.paper_id}`}>
+                    <Link to={`/browser/${paper._id}`}>
                       {paper.paper_name}
                     </Link>
                   </h3>

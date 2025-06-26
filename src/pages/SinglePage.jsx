@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import { getPaperById } from "../services/paperServices";
 import { getCategories } from "../services/categoriesServices";
-import { getTags } from "../services/tagServices";
+import { getAllUsers } from "../services/userServices";
 
 import PaperDetails from "../components/PaperDetails";
 
@@ -18,6 +18,8 @@ const SinglePage = () => {
   const { id } = useParams();
   const [paper, setPaper] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [users, setUsers] = useState([]);
+  
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,14 +30,15 @@ const SinglePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [paperData, categoriesData, tagsData] = await Promise.all([
+        const [paperData, categoriesData, usersData] = await Promise.all([
           getPaperById(id),
           getCategories(),
-          getTags(),
+          getAllUsers(),
         ]);
 
         setPaper(paperData);
         setCategories(categoriesData.data);
+        setUsers(usersData);
        
     
     
@@ -48,6 +51,9 @@ const SinglePage = () => {
     };
     fetchData();
   }, [id]);
+  console.log("Paper Data:", paper);
+  console.log("Categories Data:", categories);
+  console.log("Users Data:", users);
 
   const handleBack = () => {
     navigate(-1);
@@ -62,8 +68,6 @@ const SinglePage = () => {
     (cat) => cat.category_id === paper.category_id
   );
 
-
-  
 
   const BASE_URL =import.meta.env.VITE_API_URL;// or your production URL
  
@@ -87,6 +91,7 @@ const SinglePage = () => {
           <PaperDetails
             paper={paper}
             categoryName={category ? category.category : "Unknown"}
+            users={users}
           />
 
           {/* Document Preview Section */}

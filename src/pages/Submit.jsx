@@ -111,15 +111,8 @@ const Submit = () => {
     formData.append("category_id", category);
 
     formData.append("tags", JSON.stringify(tags));
-    formData.append(
-      "coauthors",
-      JSON.stringify(
-        coauthors
-          .split(",")
-          .map((c) => c.trim())
-          .filter((c) => c !== "")
-      )
-    );
+    formData.append("coauthors", JSON.stringify(selectedCoauthors));
+
     formData.append("meta", meta);
 
     try {
