@@ -106,10 +106,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 px-6 py-8">
-      {successMessage && (
-        <div className="max-w-5xl mx-auto mb-4">
-          {successMessage}
-          </div>)}
+     
       <div className="max-w-5xl mx-auto">
         <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Your Bio</h2>
@@ -269,6 +266,12 @@ const Profile = () => {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+         {successMessage && (
+        <div className="fixed top-5 right-5 bg-green-500 text-white p-4 rounded-md shadow-lg transition-opacity duration-500">
+          {successMessage}
         </div>
       )}
     </div>
