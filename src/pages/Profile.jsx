@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { getPapersByUser, deletePapers,updatePaper } from "../services/paperServices";
+import {
+  getPapersByUser,
+  deletePapers,
+  updatePaper,
+} from "../services/paperServices";
 import { Link } from "react-router-dom";
-import { FiEdit, FiTrash } from "react-icons/fi";
+import { FiEdit, FiTrash ,FiAlertTriangle} from "react-icons/fi";
 import EditModal from "../components/editModal"; // Import the EditModal component
 
 const Profile = () => {
@@ -13,6 +17,9 @@ const Profile = () => {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false); // Control modal visibility
   const [paperToEdit, setPaperToEdit] = useState(null); // Store the paper to edit
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [paperToDelete, setPaperToDelete] = useState(null);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
@@ -46,8 +53,6 @@ const Profile = () => {
       setError("Failed to fetch user papers");
     }
   };
- ;
-
   const handleEdit = (paperId) => {
     const selectedPaper = papers.find((paper) => paper._id === paperId);
     if (!selectedPaper) {
@@ -62,13 +67,12 @@ const Profile = () => {
   const handleDelete = async (paperId) => {
     try {
       await deletePapers(paperId);
-
-      // Update the state for the deleted paper
       setPapers((prevPapers) =>
         prevPapers.filter((paper) => paper._id !== paperId)
       );
+      setSuccessMessage("Paper deleted successfully.");
+      setTimeout(() => setSuccessMessage(""), 3000); 
 
-      console.log(`Deleted paper with ID: ${paperId}`);
     } catch (err) {
       console.error("Error deleting paper:", err);
       setError("Failed to delete paper");
@@ -83,9 +87,9 @@ const Profile = () => {
   const handleEditSubmit = async (formData) => {
     try {
       // Call the API to update the paper
-      await updatePaper(formData)
+      await updatePaper(formData);
       await fetchUserPapers(user.id); // Refresh the papers after editing
-      setIsModalOpen(false); 
+      setIsModalOpen(false);
     } catch (err) {
       console.error("Error updating paper:", err);
       setError("Failed to update the paper");
@@ -102,8 +106,12 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 px-6 py-8">
+      {successMessage && (
+        <div className="max-w-5xl mx-auto mb-4">
+          {successMessage}
+          </div>)}
       <div className="max-w-5xl mx-auto">
-          <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
+        <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Your Bio</h2>
           <div className="flex flex-col items-center gap-4">
             <div>
@@ -125,7 +133,9 @@ const Profile = () => {
               )}
             </div>
             <div className="w-full">
-              <label className="block text-gray-700 font-semibold mb-2">Bio</label>
+              <label className="block text-gray-700 font-semibold mb-2">
+                Bio
+              </label>
               <textarea
                 value={bio}
                 onChange={handleBioChange}
@@ -176,14 +186,14 @@ const Profile = () => {
         </div>
 
         {/* Bio and Photo Section */}
-      
 
         {/* Papers Section */}
         <div className="bg-white shadow-lg rounded-lg p-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Your Papers</h2>
-         
-          { ( papers.length === 0 ) ? (
-            <p className="text-gray-500">No papers found. Start adding your research
+
+          {papers.length === 0 ? (
+            <p className="text-gray-500">
+              No papers found. Start adding your research
             </p>
           ) : (
             papers.map((paper) => (
@@ -193,13 +203,10 @@ const Profile = () => {
               >
                 <div>
                   <h3 className="text-lg font-semibold text-blue-600 hover:underline">
-                    <Link to={`/browser/${paper._id}`}>
-                      {paper.paper_name}
-                    </Link>
+                    <Link to={`/browser/${paper._id}`}>{paper.paper_name}</Link>
                   </h3>
                   <p className="text-sm text-gray-600">
-                    Published:{" "}
-                    {new Date(paper.created_at).toLocaleDateString()}
+                    Published: {new Date(paper.created_at).toLocaleDateString()}
                   </p>
                 </div>
                 <div className="flex space-x-4">
@@ -210,7 +217,11 @@ const Profile = () => {
                     <FiEdit size={20} />
                   </button>
                   <button
-                    onClick={() => handleDelete(paper._id)}
+                    onClick={() => {
+                      console.log("Deleting paper with ID:", paper._id);
+                      setPaperToDelete(paper._id);
+                      setIsDeleteModalOpen(true);
+                    }}
                     className="text-red-500 hover:text-red-700"
                   >
                     <FiTrash size={20} />
@@ -230,6 +241,35 @@ const Profile = () => {
           onSubmit={handleEditSubmit}
           paperData={paperToEdit} // Pass the selected paper data to the modal
         />
+      )}
+
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center border  border-red-500 bg-opacity-50 ">
+          <div className="bg-white flex flex-col items-center justify-center rounded-lg p-6 shadow-lg max-w-md w-full">
+            <div className="flex items-center justify-center mb-4">
+              <FiAlertTriangle className="text-red-500" size={40} />
+            </div>
+            <h2 className="text-xl font-semibold mb-4">Confirm Deletion</h2>
+            <p className="mb-4">Are you sure you want to delete this paper?</p>
+            <div className="flex justify-between w-full space-x-4">
+              <button
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  handleDelete(paperToDelete);
+                  setIsDeleteModalOpen(false);
+                }}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
