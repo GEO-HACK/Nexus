@@ -4,8 +4,7 @@ import { getCategories } from '../services/categoriesServices';
 import { getAllUsers } from '../services/userServices';
 
 /**
- * Custom hook for managing single paper page data
- * This separates data fetching logic from UI components
+
  * @param {string} paperId - The ID of the paper to fetch
  * @returns {object} - Contains paper data, loading state, error state, and helper functions
  */
@@ -28,31 +27,63 @@ export const usePaperData = (paperId) => {
         setLoading(true);
         setError(null);
 
-        // Fetch all data in parallel for better performance
-        const [paperResponse, categoriesResponse, usersResponse] = await Promise.all([
-          getPaperById(paperId),
-          getCategories(),
-          getAllUsers().catch(() => []) // Graceful fallback for users
-        ]);
+        console.log("Fetching data for paper ID:", paperId);
 
-        // Handle different response structures
-        const paperData = paperResponse?.data || paperResponse;
-        const categoriesData = categoriesResponse?.data || categoriesResponse;
-        const usersData = usersResponse?.data || usersResponse;
+        // First, try to fetch categories (this seems to work)
+        let categoriesData = [];
+        try {
+          const categoriesResponse = await getCategories();
+          categoriesData = categoriesResponse?.data || categoriesResponse;
+          console.log("Categories fetched successfully:", categoriesData);
+        } catch (err) {
+          console.warn("Failed to fetch categories:", err);
+          // Continue without categories
+        }
+
+        // Then try to fetch the paper
+        let paperData = null;
+        try {
+          const paperResponse = await getPaperById(paperId);
+          paperData = paperResponse?.data || paperResponse;
+          console.log("Paper fetched successfully:", paperData);
+        } catch (err) {
+          console.error("Failed to fetch paper:", err);
+          
+          // Provide more specific error messages
+          if (err.response?.status === 404) {
+            throw new Error("Paper not found. Please check the paper ID.");
+          } else if (err.response?.status === 403) {
+            throw new Error("Access denied. You don't have permission to view this paper.");
+          } else {
+            throw new Error(`Failed to load paper: ${err.message}`);
+          }
+        }
+
+        // Finally, try to fetch users (optional, since it's failing with 403)
+        let usersData = [];
+        try {
+          const usersResponse = await getAllUsers();
+          usersData = usersResponse?.data || usersResponse;
+          console.log("Users fetched successfully:", usersData);
+        } catch (err) {
+          console.warn("Failed to fetch users (continuing without user data):", err);
+          // Continue without users - this is not critical for viewing papers
+        }
 
         // Validate paper data
         if (!paperData) {
-          throw new Error("Paper not found");
+          throw new Error("Paper data is empty or invalid");
         }
 
+        // Set all state
         setPaper(paperData);
         setCategories(Array.isArray(categoriesData) ? categoriesData : []);
         setUsers(Array.isArray(usersData) ? usersData : []);
 
-        console.log("Fetched Data:", {
+        console.log("All data set successfully:", {
           paper: paperData,
-          categories: categoriesData,
-          users: usersData
+          categoriesCount: categoriesData.length,
+          usersCount: usersData.length
         });
 
       } catch (err) {
@@ -88,14 +119,30 @@ export const usePaperData = (paperId) => {
   /**
    * Helper function to get user name by ID
    * This encapsulates the business logic for user matching
+   * Gracefully handles missing user data
    */
   const getUserName = (userId) => {
-    if (!users.length || !userId) {
+    if (!userId) {
       return "Unknown User";
     }
 
+    if (!users.length) {
+      // If no users are loaded (due to 403 error), just return the user ID
+      return `User ${userId.slice(-4)}`; // Show last 4 characters of ID
+    }
+
     const user = users.find(u => u._id === userId || String(u._id) === String(userId));
-    return user ? (user.fname + " " + user.lname || user.username || user.email) : "Unknown User";
+    
+    if (!user) {
+      return `User ${userId.slice(-4)}`; // Show last 4 characters if not found
+    }
+
+    // Try different name combinations
+    if (user.fname && user.lname) {
+      return `${user.fname} ${user.lname}`;
+    }
+    
+    return user.username || user.email || `User ${userId.slice(-4)}`;
   };
 
   return {

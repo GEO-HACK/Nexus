@@ -26,13 +26,17 @@ const SinglePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   
+  // Debug logging
+  console.log("SinglePage - Paper ID from URL:", id);
+  
   // All data management is handled by the custom hook
   const { 
     paper, 
     loading, 
     error, 
     getCategoryName, 
-    users 
+    users,
+    getUserName
   } = usePaperData(id);
 
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
@@ -90,6 +94,7 @@ const SinglePage = () => {
         paper={paper}
         categoryName={getCategoryName()}
         users={users}
+        getUserName={getUserName}
       />
 
       {/* Document Preview Section */}

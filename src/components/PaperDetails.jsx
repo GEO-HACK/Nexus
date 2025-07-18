@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const PaperDetails = ({ paper, categoryName, users = [] }) => {
+const PaperDetails = ({ paper, categoryName, users = [], getUserName }) => {
   const navigate = useNavigate();
   const BASE_URL = import.meta.env.VITE_API_URL; // or your production URL
 
@@ -74,14 +74,11 @@ const PaperDetails = ({ paper, categoryName, users = [] }) => {
           <h2 className="text-xl font-semibold text-gray-800">Co-authors</h2>
           {paper.coauthors && paper.coauthors.length > 0 ? (
             <ul className="list-disc list-inside mt-2 text-gray-700">
-              {paper.coauthors.map((id) => {
-                const user = users.find((u) => u._id === id);
-                return (
-                  <li key={id}>
-                    {user ? `${user.fname} ${user.lname}` : "Unknown Author"}
-                  </li>
-                );
-              })}
+              {paper.coauthors.map((id) => (
+                <li key={id}>
+                  {getUserName ? getUserName(id) : `User ${id.slice(-4)}`}
+                </li>
+              ))}
             </ul>
           ) : (
             <p className="text-gray-700">No co-authors listed.</p>
