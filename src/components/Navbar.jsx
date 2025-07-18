@@ -47,7 +47,7 @@ const Navbar = () => {
         ) : isAuthenticated ? (
           <div className="relative flex items-center space-x-4" ref={dropdownRef}>
             <Link to="/submit">
-              <span className="px-4 py-2 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-black font-semibold hover:scale-105 transition-transform">
+              <span className="px-4 py-2 rounded-2xl bg-gradient-to-r from-blue-800 to-blue-400 text-white font-semibold hover:scale-105 transition-transform">
                 Submit
               </span>
             </Link>

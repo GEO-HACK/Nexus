@@ -98,14 +98,7 @@ const Footer = () => {
                 <Mail size={20} className="text-blue-400" />
                 <span className="text-gray-400">support@nexus.com</span>
               </div>
-              <div className="flex items-center space-x-3">
-                <Phone size={20} className="text-blue-400" />
-                <span className="text-gray-400">+1 (555) 123-4567</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <MapPin size={20} className="text-blue-400" />
-                <span className="text-gray-400">San Francisco, CA</span>
-              </div>
+            
             </div>
           </div>
         </div>
