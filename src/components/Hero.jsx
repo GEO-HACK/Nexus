@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Search, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; // Import useAuth
 
 const categories = ["All", "Computer Science", "Physics", "Mathematics", "Biology", "Chemistry"];
 
@@ -8,6 +9,9 @@ const Hero = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState("All");
   const [showDropdown, setShowDropdown] = useState(false);
+  
+  // Get authentication state
+  const { user, isAuthenticated, loading } = useAuth();
 
   return (
     <section className="bg-gradient-to-br from-gray-900 to-blue-900 text-white py-20 px-6 md:px-12">
@@ -68,7 +72,7 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* Simple CTA buttons */}
+        {/* CTA buttons - Submit button conditionally rendered */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             to="/browser"
@@ -76,12 +80,22 @@ const Hero = () => {
           >
             Browse Papers
           </Link>
-          <Link
-            to="/submit"
-            className="px-8 py-3 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-gray-900 transition-colors duration-200"
-          >
-            Submit Research
-          </Link>
+          
+          {!loading && isAuthenticated ? (
+            <Link
+              to="/submit"
+              className="px-8 py-3 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-gray-900 transition-colors duration-200"
+            >
+              Submit Research
+            </Link>
+          ) : !loading && (
+            <Link
+              to="/login"
+              className="px-8 py-3 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-gray-900 transition-colors duration-200"
+            >
+              Login to Submit
+            </Link>
+          )}
         </div>
       </div>
     </section>

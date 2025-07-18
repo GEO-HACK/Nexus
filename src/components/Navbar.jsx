@@ -7,7 +7,16 @@ const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
-  const { user, handleLogout, loading } = useAuth();
+  const { user, isAuthenticated, handleLogout, loading } = useAuth();
+
+  // Debug authentication state
+  useEffect(() => {
+    console.log("Navbar: Auth state changed", { 
+      user: user ? user.username : null, 
+      isAuthenticated, 
+      loading 
+    });
+  }, [user, isAuthenticated, loading]);
 
   const toggleDropdown = () => setShowDropdown(!showDropdown);
 
@@ -33,10 +42,12 @@ const Navbar = () => {
         <Link to="/" className="hover:text-orange-300 transition duration-200">Home</Link>
         <Link to="/browser" className="hover:text-orange-300 transition duration-200">Articles</Link>
 
-        {loading ? null : user ? (
+        {loading ? (
+          <div className="text-gray-300">Loading...</div>
+        ) : isAuthenticated ? (
           <div className="relative flex items-center space-x-4" ref={dropdownRef}>
             <Link to="/submit">
-              <span className="px-4 py-2 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-black font-semibold hover:scale-105 transition-transform">
+              <span className="px-4 py-2 rounded-2xl bg-gradient-to-r from-blue-800 to-blue-400 text-white font-semibold hover:scale-105 transition-transform">
                 Submit
               </span>
             </Link>

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import {
   login,
   signup,
@@ -31,45 +31,114 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  const handleLogin = async (email, password) => {
-    const response = await login(email, password);
+  const handleLogin = useCallback(async (email, password) => {
+    try {
+      setLoading(true);
+      const response = await login(email, password);
 
-    if (response.token) {
-      const userData = {
-        email: response.user.email,
-        username: response.user.username,
-        // add more fields if needed
-      };
+      if (response.token && response.user) {
+        const userData = {
+          id: response.user.id || response.user._id,
+          email: response.user.email,
+          username: response.user.username,
+          fname: response.user.fname,
+          lname: response.user.lname,
+          institution: response.user.institution,
+          // add more fields if needed
+        };
 
-      localStorage.setItem("user", JSON.stringify(userData));
-      setUser(userData);
-      setLoading(false); // <-- Add this line
+        // Update state immediately before localStorage to ensure immediate re-render
+        setUser(userData);
+        localStorage.setItem("user", JSON.stringify(userData));
+        console.log("User logged in successfully:", userData);
+        
+        // Force re-render by updating loading state after user is set
+        setLoading(false);
+        return response;
+      }
+
+      setLoading(false);
+      return response;
+    } catch (error) {
+      setLoading(false);
+      console.error("Login error:", error);
+      throw error;
     }
-
-    return response;
-  };
+  }, []);
   
   
 
-  const handleSignup = async (institution, fname, lname,username, email, password) => {
-    const response = await signup(institution,fname, lname,username, email, password);
-    if (response.token) {
-      const userData = { email };
-      localStorage.setItem("user", JSON.stringify(userData));
-      setUser(userData);
+  const handleSignup = useCallback(async (institution, fname, lname, username, email, password) => {
+    try {
+      setLoading(true);
+      const response = await signup(institution, fname, lname, username, email, password);
+      
+      if (response.token && response.user) {
+        const userData = {
+          id: response.user.id || response.user._id,
+          email: response.user.email,
+          username: response.user.username,
+          fname: response.user.fname,
+          lname: response.user.lname,
+          institution: response.user.institution,
+        };
+        
+        // Update state immediately before localStorage to ensure immediate re-render
+        setUser(userData);
+        localStorage.setItem("user", JSON.stringify(userData));
+        console.log("User signed up successfully:", userData);
+        
+        // Force re-render by updating loading state after user is set
+        setLoading(false);
+        return response;
+      }
+      
+      setLoading(false);
+      return response;
+    } catch (error) {
+      setLoading(false);
+      console.error("Signup error:", error);
+      throw error;
     }
-    return response;
-  };
+  }, []);
 
-  const handleLogout = async () => {
-    await logout();
-    localStorage.removeItem("user"); // Clear stored user
-    setUser(null); // Trigger re-render
-  };
+  const handleLogout = useCallback(async () => {
+    try {
+      setLoading(true);
+      await logout();
+      localStorage.removeItem("user");
+      localStorage.removeItem("token"); // Also remove token
+      setUser(null);
+      console.log("User logged out successfully");
+      setLoading(false);
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Even if logout fails, clear local state
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      setUser(null);
+      setLoading(false);
+    }
+  }, []);
+
+  // Helper to determine if user is authenticated
+  const isAuthenticated = Boolean(user);
+
+  // Debug logging for state changes
+  useEffect(() => {
+    console.log("Auth state changed:", { user: user ? user.username : null, loading, isAuthenticated });
+  }, [user, loading, isAuthenticated]);
 
   return (
     <AuthContext.Provider
-      value={{ user, handleLogin, handleSignup, handleLogout, loading }}
+      value={{ 
+        user, 
+        isAuthenticated, 
+        handleLogin, 
+        handleSignup, 
+        handleLogout, 
+        loading 
+      }}
     >
       {children}
     </AuthContext.Provider>
