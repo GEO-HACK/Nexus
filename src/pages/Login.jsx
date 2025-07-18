@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { login, signup } from "../services/authServices";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; // Import useAuth
 
 const AuthForm = () => {
   const [isSignup, setIsSignup] = useState(false);
@@ -14,54 +14,53 @@ const AuthForm = () => {
   const [loading, setLoading] = useState(false);
   const [welcome, setWelcome] = useState("");
   const navigate = useNavigate();
+  
+  // Use the auth context instead of direct API calls
+  const { handleLogin, handleSignup } = useAuth();
 
  const handleSubmit = async (e) => {
   e.preventDefault();
   setError("");
   setLoading(true);
 
-  let response;
-  if (isSignup) {
-    if (!fname || !lname || !institution || !username || !email || !password) {
-      setError("All fields are required for signup");
-      setLoading(false);
-      return;
-    }
-    response = await signup(institution, fname, lname, username, email, password);
-  } else {
-    if (!email || !password) {
-      setError("Email and password are required for login");
-      setLoading(false);
-      return;
-    }
-    response = await login(email, password);
-  }
-
-  setLoading(false);
-
-  if (response.error) {
-    setError(response.error);
-  } else {
-    // Save token and user only if they exist
-    if (response.user && response.token) {
-      localStorage.setItem("user", JSON.stringify(response.user));
-      localStorage.setItem("token", response.token);
+  try {
+    let response;
+    
+    if (isSignup) {
+      if (!fname || !lname || !institution || !username || !email || !password) {
+        setError("All fields are required for signup");
+        setLoading(false);
+        return;
+      }
+      response = await handleSignup(institution, fname, lname, username, email, password);
+    } else {
+      if (!email || !password) {
+        setError("Email and password are required for login");
+        setLoading(false);
+        return;
+      }
+      response = await handleLogin(email, password);
     }
 
-    setWelcome(`Welcome ${response.user?.fname || ""} ${response.user?.lname || ""}!`);
+    setLoading(false);
 
-    // Redirect after short delay to show message
-    setTimeout(() => {
+    if (response.error) {
+      setError(response.error);
+    } else if (response.user && response.token) {
+      // Success - the auth context has already updated the state
+      setWelcome(`Welcome ${response.user.fname || response.user.username}!`);
+      
+      console.log("Login/Signup successful, navigating to home...");
+      
+      // Navigate immediately without delay to ensure state is already updated
       navigate("/");
-    }, 1500);
-
-    // Optional: clear welcome message after 4 seconds
-    setTimeout(() => {
-      setWelcome("");
-    }, 4000);
+    }
+  } catch (error) {
+    setLoading(false);
+    console.error("Auth error:", error);
+    setError(error.message || "An error occurred");
   }
 };
-
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
